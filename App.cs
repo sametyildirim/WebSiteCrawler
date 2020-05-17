@@ -48,9 +48,6 @@ namespace WebSiteCrawler
             CrawlSite(site);
 
 
-            SendMail( "crontab finished","");
-
-
 
         }
         public void CrawlSite(WebSite website)
