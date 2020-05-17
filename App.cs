@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using WebSiteCrawler.Sites;
-
+using System.Net.Mail;
 
 namespace WebSiteCrawler
 {
@@ -25,40 +25,75 @@ namespace WebSiteCrawler
         public void Run()
         {
 
+
             WebSite site = new Wired(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
             site = new Sciencedaily(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
             site = new Sciencenews(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
             site = new Bbc(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
             site = new Independent(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
             site = new Aidaily(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
             site = new Newsmit(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
-            
-            site = new Artificialintelligencenews(_context);
-            site.Crawl();
-            Console.WriteLine(site.Name +" finished");
+            CrawlSite(site);
 
 
 
+
+
+
+        }
+        public void CrawlSite(WebSite website)
+        {
+            try
+            {
+                website.Crawl();
+                Console.WriteLine(website.Name + " finished");
+            }
+            catch (Exception ex)
+            {
+                SendMail(website.Name + " has error." + ex.ToString(), website.Name);
+            }
+            finally
+            {
+                SendMail(website.Name + " has finished", website.Name);
+            }
+        }
+        public void SendMail(string mailbody, string sitename)
+        {
+            var fromAddress = new MailAddress("samet52@gmail.com", "aidailynews");
+            var toAddress = new MailAddress("samet52@gmail.com", "aidailynews");
+            const string fromPassword = "olpqooxjqqkrgjau";
+            string subject = "aidailynews error " + sitename;
+            string body = mailbody;
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                smtp.Send(message);
+            }
         }
 
     }
