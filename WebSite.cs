@@ -33,7 +33,7 @@ namespace WebSiteCrawler
                 article.IsActive = true;
                 article.IsDeleted = false;
                 article.CreateDate = DateTime.Today;
-                article.ImgUrl = this.Image;
+                article.ImgUrl = this.Image.Replace("http:","https:");
                 article.ReleaseDate = this.ReleaseDate;
                 article.Source = this.Name;
 
