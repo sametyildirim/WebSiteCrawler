@@ -64,10 +64,7 @@ namespace WebSiteCrawler
             {
                 SendMail(website.Name + " has error." + ex.ToString(), website.Name);
             }
-            finally
-            {
-                SendMail(website.Name + " has finished", website.Name);
-            }
+
         }
         public void SendMail(string mailbody, string sitename)
         {
