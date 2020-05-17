@@ -48,7 +48,7 @@ namespace WebSiteCrawler
             CrawlSite(site);
 
 
-
+            SendMail( "crontab finished","");
 
 
 
