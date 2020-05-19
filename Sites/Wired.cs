@@ -18,7 +18,7 @@ namespace WebSiteCrawler.Sites
         }
         public override  List<string> GetLinks()
         {
-            var html = "https://www.wired.com/tag/machine-learning/";
+            var html = "https://www.wired.com/tag/artificial-intelligence/";
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
             var node = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'primary-grid-component')]/div");
