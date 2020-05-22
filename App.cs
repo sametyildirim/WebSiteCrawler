@@ -27,26 +27,26 @@ namespace WebSiteCrawler
                 Log("Job Started", w);
             }
 
-                WebSite site = new Wired(_context);
-                CrawlSite(site);
+            WebSite site = new Wired(_context);
+            CrawlSite(site);
 
-                site = new Sciencedaily(_context);
-                CrawlSite(site);
+            site = new Sciencedaily(_context);
+            CrawlSite(site);
 
-                site = new Sciencenews(_context);
-                CrawlSite(site);
+            site = new Sciencenews(_context);
+            CrawlSite(site);
 
-                site = new Bbc(_context);
-                CrawlSite(site);
+            site = new Bbc(_context);
+            CrawlSite(site);
 
-                site = new Independent(_context);
-                CrawlSite(site);
+            site = new Independent(_context);
+            CrawlSite(site);
 
-                site = new Aidaily(_context);
-                CrawlSite(site);
+            site = new Aidaily(_context);
+            CrawlSite(site);
 
-                site = new Newsmit(_context);
-                CrawlSite(site);
+            site = new Newsmit(_context);
+            CrawlSite(site);
 
             using (StreamWriter w = File.AppendText("log.txt"))
             {
@@ -64,6 +64,10 @@ namespace WebSiteCrawler
             }
             catch (Exception ex)
             {
+                using (StreamWriter w = File.AppendText("log.txt"))
+                {
+                    Log("Error Occured "+ex.ToString(), w);
+                }
                 SendMail(website.Name + " has error." + ex.ToString(), website.Name);
             }
 
