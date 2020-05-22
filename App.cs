@@ -22,30 +22,32 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-
-            WebSite site = new Wired(_context);
-            CrawlSite(site);
-
-            site = new Sciencedaily(_context);
-            CrawlSite(site);
-
-            site = new Sciencenews(_context);
-            CrawlSite(site);
-
-            site = new Bbc(_context);
-            CrawlSite(site);
-
-            site = new Independent(_context);
-            CrawlSite(site);
-
-            site = new Aidaily(_context);
-            CrawlSite(site);
-
-            site = new Newsmit(_context);
-            CrawlSite(site);    
-
             using (StreamWriter w = File.AppendText("log.txt"))
             {
+                Log("Job Started", w);
+
+                WebSite site = new Wired(_context);
+                CrawlSite(site);
+
+                site = new Sciencedaily(_context);
+                CrawlSite(site);
+
+                site = new Sciencenews(_context);
+                CrawlSite(site);
+
+                site = new Bbc(_context);
+                CrawlSite(site);
+
+                site = new Independent(_context);
+                CrawlSite(site);
+
+                site = new Aidaily(_context);
+                CrawlSite(site);
+
+                site = new Newsmit(_context);
+                CrawlSite(site);
+
+
                 Log("Job Finished", w);
             }
 
