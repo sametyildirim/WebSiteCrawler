@@ -9,6 +9,7 @@ using System.Net;
 using Newtonsoft.Json;
 using WebSiteCrawler.Sites;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 namespace WebSiteCrawler
 {
@@ -16,10 +17,12 @@ namespace WebSiteCrawler
     {
         private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
-        public App(IConfiguration config, ApplicationDbContext context)
+         private readonly IOptions<EmailSettingsModel> _emailSettings;  
+        public App(IConfiguration config, ApplicationDbContext context, IOptions<EmailSettingsModel> emailSettings)
         {
             _config = config;
             _context = context;
+            _emailSettings = emailSettings;
         }
 
         public void Run()
@@ -45,8 +48,7 @@ namespace WebSiteCrawler
             CrawlSite(site);
 
             site = new Newsmit(_context);
-            CrawlSite(site);
-
+            CrawlSite(site);           
 
 
         }
@@ -65,29 +67,11 @@ namespace WebSiteCrawler
         }
         public void SendMail(string mailbody, string sitename)
         {
-            var fromAddress = new MailAddress("samet52@gmail.com", "aidailynews");
-            var toAddress = new MailAddress("samet52@gmail.com", "aidailynews");
-            const string fromPassword = "olpqooxjqqkrgjau";
+         
             string subject = "aidailynews error " + sitename;
             string body = mailbody;
-
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body
-            })
-            {
-                smtp.Send(message);
-            }
+            _emailSettings.Value.SendMail(subject, body);
+            
         }
 
     }

@@ -26,15 +26,12 @@ namespace WebSiteCrawler
         private static IServiceCollection ConfigureServices()
         {
             IServiceCollection services = new ServiceCollection();
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
 
             var config = LoadConfiguration();
             services.AddSingleton(config);
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(config.GetConnectionString("DefaultConnection")));
+            services.Configure<EmailSettingsModel>(config.GetSection("EmailSettings")); 
             services.AddTransient<App>();
             return services;
         }
