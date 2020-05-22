@@ -1,15 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Text;
-using System.Collections.Generic;
-using HtmlAgilityPack;
 using BoilerPlateCms.Data;
-using System.Linq;
-using System.Net;
-using Newtonsoft.Json;
 using WebSiteCrawler.Sites;
-using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using System.IO;
 
 namespace WebSiteCrawler
 {
@@ -17,7 +11,7 @@ namespace WebSiteCrawler
     {
         private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
-         private readonly IOptions<EmailSettingsModel> _emailSettings;  
+        private readonly IOptions<EmailSettingsModel> _emailSettings;
         public App(IConfiguration config, ApplicationDbContext context, IOptions<EmailSettingsModel> emailSettings)
         {
             _config = config;
@@ -48,7 +42,12 @@ namespace WebSiteCrawler
             CrawlSite(site);
 
             site = new Newsmit(_context);
-            CrawlSite(site);           
+            CrawlSite(site);    
+
+            using (StreamWriter w = File.AppendText("log.txt"))
+            {
+                Log("Job Finished", w);
+            }
 
 
         }
@@ -67,11 +66,18 @@ namespace WebSiteCrawler
         }
         public void SendMail(string mailbody, string sitename)
         {
-         
+
             string subject = "aidailynews error " + sitename;
             string body = mailbody;
             _emailSettings.Value.SendMail(subject, body);
-            
+
+        }
+        public static void Log(string logMessage, TextWriter w)
+        {
+            w.Write("\r\nLog Entry : ");
+            w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+            w.WriteLine($"  :{logMessage}");
+            w.WriteLine("-------------------------------");
         }
 
     }
