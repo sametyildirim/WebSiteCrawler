@@ -25,6 +25,7 @@ namespace WebSiteCrawler
             using (StreamWriter w = File.AppendText("log.txt"))
             {
                 Log("Job Started", w);
+            }
 
                 WebSite site = new Wired(_context);
                 CrawlSite(site);
@@ -47,7 +48,8 @@ namespace WebSiteCrawler
                 site = new Newsmit(_context);
                 CrawlSite(site);
 
-
+            using (StreamWriter w = File.AppendText("log.txt"))
+            {
                 Log("Job Finished", w);
             }
 
