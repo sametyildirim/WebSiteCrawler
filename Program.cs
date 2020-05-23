@@ -39,7 +39,7 @@ namespace WebSiteCrawler
         public static IConfiguration LoadConfiguration()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             return builder.Build();
