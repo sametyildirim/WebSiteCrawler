@@ -48,7 +48,7 @@ namespace WebSiteCrawler
             site = new Newsmit(_context);
             CrawlSite(site);
 
-            using (StreamWriter w = File.AppendText("log.txt"))
+            using (StreamWriter w = File.AppendText("/tmp/log.txt"))
             {
                 Log("Job Finished", w);
             }
@@ -64,7 +64,7 @@ namespace WebSiteCrawler
             }
             catch (Exception ex)
             {
-                using (StreamWriter w = File.AppendText("log.txt"))
+                using (StreamWriter w = File.AppendText("/tmp/log.txt"))
                 {
                     Log("Error Occured "+ex.ToString(), w);
                 }
