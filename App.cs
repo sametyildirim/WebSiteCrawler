@@ -22,7 +22,7 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-            using (StreamWriter w = File.AppendText("log.txt"))
+            using (StreamWriter w = File.AppendText("/tmp/log.txt"))
             {
                 Log("Job Started", w);
             }
