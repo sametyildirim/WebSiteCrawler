@@ -25,8 +25,8 @@ namespace WebSiteCrawler
         {
 
             StartAllCrawling();
-            //WebSite website = new Theverge(_context);
-            //website.Crawl();
+            // WebSite website = new Theverge(_context);
+            // website.Crawl();
 
         }
         public void StartAllCrawling()

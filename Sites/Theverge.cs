@@ -51,32 +51,29 @@ namespace WebSiteCrawler.Sites
 
                     foreach (var item in list)
                     {
-                        string content = item.GetAttributeValue("property", "");
-                        if (content == "og:url")
+                        string metaname = item.GetAttributeValue("name", "");
+                        string metaproperty= item.GetAttributeValue("property", "");
+                        if (metaproperty == "og:url")
                         {
                             Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (content == "og:title")
+                        if (metaname == "sailthru.title")
                         {
                             Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (content == "og:description")
+                        if (metaname == "sailthru.description")
                         {
                             Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (content == "og:image")
+                        if (metaname == "sailthru.image.thumb")
                         {
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (content == "sailthru.date")
+                        if (metaproperty == "article:published_time")
                         {
                             ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
                         }
                     }
-
-                    var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    ContextJson myJson = JsonConvert.DeserializeObject<ContextJson>(json);
-                    ReleaseDate = myJson.datePublished;
 
 
                     AddDb();
