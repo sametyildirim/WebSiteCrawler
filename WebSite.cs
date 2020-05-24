@@ -12,7 +12,7 @@ namespace WebSiteCrawler
         public string Content { get; set; }
         public string Image { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public string Name { get; set; }
+        public string Name;
         public abstract List<string> GetLinks();
         public abstract void Crawl();
         public ApplicationDbContext _context;
@@ -26,6 +26,7 @@ namespace WebSiteCrawler
             var existingArticle = _context.Articles.FirstOrDefault(a => a.Url == this.Url);
             if (existingArticle == null)
             {
+                var articleSource = _context.Sources.FirstOrDefault(a => a.Name == this.Name);
                 Article article = new Article();
                 article.Url = this.Url;
                 article.Subject = this.Subject;
@@ -36,7 +37,7 @@ namespace WebSiteCrawler
                 if(this.Image!=null) this.Image = this.Image.Replace("http:","https:");
                 article.ImgUrl = this.Image;
                 article.ReleaseDate = this.ReleaseDate;
-                article.Source = this.Name;
+                article.ArticleSource  = articleSource;
 
                 _context.Articles.Add(article);
                 _context.SaveChanges();

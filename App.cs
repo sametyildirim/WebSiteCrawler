@@ -48,6 +48,9 @@ namespace WebSiteCrawler
             site = new Newsmit(_context);
             CrawlSite(site);
 
+            site = new Artificialintelligencenews(_context);
+            CrawlSite(site);
+
             using (StreamWriter w = File.AppendText("/tmp/log.txt"))
             {
                 Log("Job Finished", w);

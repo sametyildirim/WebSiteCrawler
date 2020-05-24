@@ -14,7 +14,7 @@ namespace WebSiteCrawler.Sites
     {
         public Aidaily(ApplicationDbContext context) : base(context)
         {
-            this.Name = "aidaily.co.uk";
+            this.Name = "aidaily";
         }
         public override List<string> GetLinks()
         {

@@ -14,7 +14,7 @@ namespace WebSiteCrawler.Sites
     {
         public Wired(ApplicationDbContext context):base (context)
         {
-            this.Name = "wired.com";
+            this.Name = "wired";
         }
         public override  List<string> GetLinks()
         {

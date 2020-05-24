@@ -14,7 +14,7 @@ namespace WebSiteCrawler.Sites
     {
         public Newsmit(ApplicationDbContext context):base (context)
         {
-            this.Name = "news.mit.edu";
+            this.Name = "newsmit";
         }
         public override  List<string> GetLinks()
         {

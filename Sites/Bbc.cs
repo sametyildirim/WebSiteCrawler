@@ -18,7 +18,7 @@ namespace WebSiteCrawler.Sites
     {
         public Bbc(ApplicationDbContext context) : base(context)
         {
-            this.Name = "bbc.com";
+            this.Name = "bbc";
         }
         public override List<string> GetLinks()
         {

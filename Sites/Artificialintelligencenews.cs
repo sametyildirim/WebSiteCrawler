@@ -14,7 +14,7 @@ namespace WebSiteCrawler.Sites
     {
         public Artificialintelligencenews(ApplicationDbContext context):base (context)
         {
-            this.Name = "artificialintelligence-news.com";
+            this.Name = "artificialintelligence-news";
         }
         public override  List<string> GetLinks()
         {

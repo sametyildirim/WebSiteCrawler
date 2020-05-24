@@ -14,7 +14,7 @@ namespace WebSiteCrawler.Sites
     {
         public Sciencedaily(ApplicationDbContext context) : base(context)
         {
-            this.Name = "sciencedaily.com";
+            this.Name = "sciencedaily";
         }
         public override List<string> GetLinks()
         {

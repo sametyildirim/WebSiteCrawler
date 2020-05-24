@@ -14,7 +14,7 @@ namespace WebSiteCrawler.Sites
     {
         public Independent(ApplicationDbContext context):base (context)
         {
-            this.Name = "independent.co.uk";
+            this.Name = "independent";
         }
         public override  List<string> GetLinks()
         {
