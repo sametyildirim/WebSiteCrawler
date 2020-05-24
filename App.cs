@@ -4,7 +4,7 @@ using BoilerPlateCms.Data;
 using Microsoft.Extensions.Options;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualBasic.CompilerServices;
+using System.Collections.Generic;
 
 namespace WebSiteCrawler
 {
@@ -29,12 +29,13 @@ namespace WebSiteCrawler
             }
 
             var classList = typeof(WebSite).Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(WebSite)) && !t.IsAbstract);
+            var sourceList = _context.Sources.ToList();
 
-            foreach(var myclass in classList)
+            foreach (var myclass in classList)
             {
 
                 var instantiatedObject = Activator.CreateInstance(Type.GetType(myclass.ToString()), _context);
-                CrawlSite((WebSite)instantiatedObject);
+                CrawlSite((WebSite)instantiatedObject, sourceList);
             }
 
             using (StreamWriter w = File.AppendText("/tmp/log.txt"))
@@ -44,18 +45,21 @@ namespace WebSiteCrawler
 
 
         }
-        public void CrawlSite(WebSite website)
+        public void CrawlSite(WebSite website, List<Source> sourceList)
         {
             try
             {
-                website.Crawl();
-                Console.WriteLine(website.Name + " finished");
+                if (sourceList.Where(x => x.Name == website.Name).FirstOrDefault().IsActive)
+                {
+                    website.Crawl();
+                    Console.WriteLine(website.Name + " finished");
+                }
             }
             catch (Exception ex)
             {
                 using (StreamWriter w = File.AppendText("/tmp/log.txt"))
                 {
-                    Log("Error Occured "+ex.ToString(), w);
+                    Log("Error Occured " + ex.ToString(), w);
                 }
                 SendMail(website.Name + " has error." + ex.ToString(), website.Name);
             }
