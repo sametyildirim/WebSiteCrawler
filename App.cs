@@ -1,9 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using BoilerPlateCms.Data;
-using WebSiteCrawler.Sites;
 using Microsoft.Extensions.Options;
 using System.IO;
+using System.Linq;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace WebSiteCrawler
 {
@@ -27,29 +28,14 @@ namespace WebSiteCrawler
                 Log("Job Started", w);
             }
 
-            WebSite site = new Wired(_context);
-            CrawlSite(site);
+            var classList = typeof(WebSite).Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(WebSite)) && !t.IsAbstract);
 
-            site = new Sciencedaily(_context);
-            CrawlSite(site);
+            foreach(var myclass in classList)
+            {
 
-            site = new Sciencenews(_context);
-            CrawlSite(site);
-
-            site = new Bbc(_context);
-            CrawlSite(site);
-
-            site = new Independent(_context);
-            CrawlSite(site);
-
-            site = new Aidaily(_context);
-            CrawlSite(site);
-
-            site = new Newsmit(_context);
-            CrawlSite(site);
-
-            site = new Artificialintelligencenews(_context);
-            CrawlSite(site);
+                var instantiatedObject = Activator.CreateInstance(Type.GetType(myclass.ToString()), _context);
+                CrawlSite((WebSite)instantiatedObject);
+            }
 
             using (StreamWriter w = File.AppendText("/tmp/log.txt"))
             {

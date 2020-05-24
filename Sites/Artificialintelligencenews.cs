@@ -12,13 +12,14 @@ namespace WebSiteCrawler.Sites
 {
     public class Artificialintelligencenews : WebSite
     {
-        public Artificialintelligencenews(ApplicationDbContext context):base (context)
+        public Artificialintelligencenews(ApplicationDbContext context) : base(context)
         {
             this.Name = "artificialintelligence-news";
+            SetRootUrl();
         }
-        public override  List<string> GetLinks()
+        public override List<string> GetLinks()
         {
-            var html = "https://artificialintelligence-news.com/";
+            var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
             var node = htmlDoc.DocumentNode.SelectSingleNode("//main");
@@ -36,38 +37,40 @@ namespace WebSiteCrawler.Sites
             List<string> links = GetLinks();
             foreach (string link in links)
             {
-
-                HtmlWeb web = new HtmlWeb();
-                var htmlDoc = web.Load(link);
-                var list = htmlDoc.DocumentNode.SelectNodes("//meta");
-                
-                foreach (var item in list)
+                if (!IfExists(link))
                 {
-                    string content = item.GetAttributeValue("property", "");
-                    if (content == "og:url")
+                    HtmlWeb web = new HtmlWeb();
+                    var htmlDoc = web.Load(link);
+                    var list = htmlDoc.DocumentNode.SelectNodes("//meta");
+
+                    foreach (var item in list)
                     {
-                        Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        string content = item.GetAttributeValue("property", "");
+                        if (content == "og:url")
+                        {
+                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        // if (content == "og:title")
+                        // {
+                        //     Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        // }
+                        // if (content == "og:description")
+                        // {
+                        //     Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        // }
+                        if (content == "og:image")
+                        {
+                            Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        if (content == "article:published_time")
+                        {
+                            ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
+                        }
                     }
-                    // if (content == "og:title")
-                    // {
-                    //     Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    // }
-                    // if (content == "og:description")
-                    // {
-                    //     Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    // }
-                    if (content == "og:image")
-                    {
-                        Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    }
-                    if (content == "article:published_time")
-                    {
-                        ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
-                    }
+                    Subject = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//header[contains(@class, 'article-header')]//h1").InnerText);
+                    Content = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//p[1]").InnerText);
+                    AddDb();
                 }
-                Subject = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//header[contains(@class, 'article-header')]//h1").InnerText);
-                Content = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//p[1]").InnerText);
-                AddDb();
 
 
             }

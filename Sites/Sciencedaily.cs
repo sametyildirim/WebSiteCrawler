@@ -15,10 +15,11 @@ namespace WebSiteCrawler.Sites
         public Sciencedaily(ApplicationDbContext context) : base(context)
         {
             this.Name = "sciencedaily";
+            SetRootUrl();
         }
         public override List<string> GetLinks()
         {
-            var html = "https://www.sciencedaily.com/news/computers_math/artificial_intelligence/";
+            var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
             var links = htmlDoc.DocumentNode.SelectNodes("//div[contains(@id, 'heroes')]//a");
@@ -50,32 +51,35 @@ namespace WebSiteCrawler.Sites
             {
 
                 var html = "https://www.sciencedaily.com" + link;
-                HtmlWeb web = new HtmlWeb();
-                var htmlDoc = web.Load(html);
-
-                var list = htmlDoc.DocumentNode.SelectNodes("//meta");
-                foreach (var item in list)
+                if (!IfExists(html))
                 {
-                    string content = item.GetAttributeValue("property", "");
-                    if (content == "og:url")
+                    HtmlWeb web = new HtmlWeb();
+                    var htmlDoc = web.Load(html);
+
+                    var list = htmlDoc.DocumentNode.SelectNodes("//meta");
+                    foreach (var item in list)
                     {
-                        Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    }
-                    // if (content == "og:title")
-                    // {
-                    //     Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    // }
-                    if (content == "og:description")
-                    {
-                        Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        string content = item.GetAttributeValue("property", "");
+                        if (content == "og:url")
+                        {
+                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        // if (content == "og:title")
+                        // {
+                        //     Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        // }
+                        if (content == "og:description")
+                        {
+                            Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+
                     }
 
+                    Subject = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//h1[contains(@class, 'headline')]").InnerText);
+                    ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//dd[contains(@id, 'date_posted')]").InnerText));
+
+                    AddDb();
                 }
-
-                Subject = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//h1[contains(@class, 'headline')]").InnerText);
-                ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//dd[contains(@id, 'date_posted')]").InnerText));
-
-                AddDb();
 
 
             }

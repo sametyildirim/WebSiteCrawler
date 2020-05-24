@@ -12,7 +12,9 @@ namespace WebSiteCrawler
         public string Content { get; set; }
         public string Image { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public string Name;
+        public string Name { get; set; }
+
+        public string RootUrl { get; set; }
         public abstract List<string> GetLinks();
         public abstract void Crawl();
         public ApplicationDbContext _context;
@@ -21,11 +23,24 @@ namespace WebSiteCrawler
         {
             this._context = context;
         }
+        public void SetRootUrl()
+        {
+            var source = _context.Sources.FirstOrDefault(a => a.Name == this.Name);
+            this.RootUrl = source.Url;
+        }
+        public bool IfExists(string _url)
+        {
+            var existingArticle = _context.Articles.FirstOrDefault(a => a.Url == _url);
+            if (existingArticle != null)
+            {
+                return true;
+            }
+            return false;
+        }
         public void AddDb()
         {
             var existingArticle = _context.Articles.FirstOrDefault(a => a.Url == this.Url);
-            if (existingArticle == null)
-            {
+            
                 var articleSource = _context.Sources.FirstOrDefault(a => a.Name == this.Name);
                 Article article = new Article();
                 article.Url = this.Url;
@@ -41,7 +56,7 @@ namespace WebSiteCrawler
 
                 _context.Articles.Add(article);
                 _context.SaveChanges();
-            }
+            
         }
 
     }

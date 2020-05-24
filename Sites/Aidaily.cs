@@ -15,10 +15,11 @@ namespace WebSiteCrawler.Sites
         public Aidaily(ApplicationDbContext context) : base(context)
         {
             this.Name = "aidaily";
+            SetRootUrl();
         }
         public override List<string> GetLinks()
         {
-            var html = "https://aidaily.co.uk";
+            var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
             var links = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'summary-title')]//a");
@@ -37,38 +38,41 @@ namespace WebSiteCrawler.Sites
             {
 
                 var html = "https://aidaily.co.uk" + link;
-                HtmlWeb web = new HtmlWeb();
-                var htmlDoc = web.Load(html);
-
-                var list = htmlDoc.DocumentNode.SelectNodes("//meta");
-                foreach (var item in list)
+                if (!IfExists(html))
                 {
-                    string content = item.GetAttributeValue("property", "");
-                    string itemprop = item.GetAttributeValue("itemprop", "");
-                    if (content == "og:url")
+                    HtmlWeb web = new HtmlWeb();
+                    var htmlDoc = web.Load(html);
+
+                    var list = htmlDoc.DocumentNode.SelectNodes("//meta");
+                    foreach (var item in list)
                     {
-                        Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    }
-                    if (itemprop == "headline")
-                    {
-                        Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    }
-                    if (content == "og:description")
-                    {
-                        Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    }
-                    if (content == "og:image")
-                    {
-                        Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                    }
-                    if (itemprop == "datePublished")
-                    {
-                        ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
+                        string content = item.GetAttributeValue("property", "");
+                        string itemprop = item.GetAttributeValue("itemprop", "");
+                        if (content == "og:url")
+                        {
+                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        if (itemprop == "headline")
+                        {
+                            Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        if (content == "og:description")
+                        {
+                            Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        if (content == "og:image")
+                        {
+                            Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                        }
+                        if (itemprop == "datePublished")
+                        {
+                            ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
+                        }
+
                     }
 
+                    AddDb();
                 }
-
-                AddDb();
 
 
             }
