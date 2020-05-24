@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using WebSiteCrawler.Sites;
 
 namespace WebSiteCrawler
 {
@@ -23,6 +24,13 @@ namespace WebSiteCrawler
         public void Run()
         {
 
+            StartAllCrawling();
+            //WebSite website = new Theverge(_context);
+            //website.Crawl();
+
+        }
+        public void StartAllCrawling()
+        {
             using (StreamWriter w = File.AppendText("/tmp/log.txt"))
             {
                 Log("Job Started", w);
@@ -42,8 +50,6 @@ namespace WebSiteCrawler
             {
                 Log("Job Finished", w);
             }
-
-
         }
         public void CrawlSite(WebSite website, List<Source> sourceList)
         {

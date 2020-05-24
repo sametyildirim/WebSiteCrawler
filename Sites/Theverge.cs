@@ -10,15 +10,11 @@ using Newtonsoft.Json;
 
 namespace WebSiteCrawler.Sites
 {
-    public class ContextJson
+    public class Theverge : WebSite
     {
-        public DateTime datePublished { get; set; }
-    }
-    public class Bbc : WebSite
-    {
-        public Bbc(ApplicationDbContext context) : base(context)
+        public Theverge(ApplicationDbContext context) : base(context)
         {
-            this.Name = "bbc";
+            this.Name = "theverge";
             SetRootUrl();
         }
         public override List<string> GetLinks()
@@ -26,12 +22,17 @@ namespace WebSiteCrawler.Sites
             var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
-            var links = htmlDoc.DocumentNode.SelectNodes("//article//a[1]");
+            //var node = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'primary-grid-component')]/div");
+            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class, 'c-entry-box--compact__image-wrapper')]");
             List<string> tags = new List<string>();
             foreach (var link in links)
             {
-                if (!tags.Contains(link.Attributes["href"].Value))
+                if ( !tags.Contains(link.Attributes["href"].Value))
+                {
                     tags.Add(link.Attributes["href"].Value);
+                }
+
+
             }
             return tags;
         }
@@ -41,7 +42,7 @@ namespace WebSiteCrawler.Sites
             foreach (string link in links)
             {
 
-                var html = "https://www.bbc.com" + link;
+                var html = link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -67,15 +68,19 @@ namespace WebSiteCrawler.Sites
                         {
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
+                        if (content == "sailthru.date")
+                        {
+                            ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
+                        }
                     }
 
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
                     ContextJson myJson = JsonConvert.DeserializeObject<ContextJson>(json);
                     ReleaseDate = myJson.datePublished;
 
+
                     AddDb();
                 }
-
 
             }
         }
