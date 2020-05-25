@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace WebSiteCrawler.Sites
 {
-     public class TechcrunchJson
+    public class TechcrunchJson
     {
         public DateTime datePublished { get; set; }
     }
@@ -24,9 +24,19 @@ namespace WebSiteCrawler.Sites
         public override List<string> GetLinks()
         {
             var html = RootUrl;
-            HtmlWeb web = new HtmlWeb();
-            web.OverrideEncoding = Encoding.UTF8;
-            var htmlDoc = web.Load(html);
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.OptionReadEncoding = false;
+            var request = (HttpWebRequest)WebRequest.Create(html);
+            request.Method = "GET";
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    htmlDoc.Load(stream, Encoding.UTF8);
+                }
+            }
+
+
             var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
             List<string> tags = new List<string>();
             foreach (var link in links)
@@ -75,8 +85,8 @@ namespace WebSiteCrawler.Sites
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
                     }
-                    
-                   
+
+
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
                     BbcJson myJson = JsonConvert.DeserializeObject<BbcJson>(json);
                     ReleaseDate = myJson.datePublished;
