@@ -21,7 +21,7 @@ namespace WebSiteCrawler.Sites
             this.Name = "techcrunch";
             SetRootUrl();
         }
-        public override List<string> GetLinks()
+        public  String[] GetLinks2()
         {
             var html = RootUrl;
             var htmlDoc = new HtmlDocument();
@@ -40,6 +40,33 @@ namespace WebSiteCrawler.Sites
             var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
 
 
+
+            String[] tags = new String[links.Count];
+            for (int i=0;i<links.Count;i++)
+            {
+                tags[i] = links[i].Attributes["href"].Value;
+
+
+            }
+            return tags;
+        }
+        public override List<string> GetLinks()
+        {
+            var html = RootUrl;
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.OptionReadEncoding = false;
+            var request = (HttpWebRequest)WebRequest.Create(html);
+            request.Method = "GET";
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    htmlDoc.Load(stream, Encoding.UTF8);
+                }
+            }
+
+
+            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
             
             List<string> tags = new List<string>();
             foreach (var link in links)
@@ -55,7 +82,7 @@ namespace WebSiteCrawler.Sites
         }
         public override void Crawl()
         {
-            List<string> links = GetLinks();
+            String[] links = GetLinks2();
             foreach (string link in links)
             {
 
