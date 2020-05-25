@@ -25,6 +25,8 @@ namespace WebSiteCrawler
         {
 
             StartAllCrawling();
+
+            
             // WebSite website = new Engadget(_context);
             // website.Crawl();
             
