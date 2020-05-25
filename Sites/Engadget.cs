@@ -55,6 +55,7 @@ namespace WebSiteCrawler.Sites
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
+                    web.OverrideEncoding = Encoding.UTF8;
                     var htmlDoc = web.Load(html);
                     var list = htmlDoc.DocumentNode.SelectNodes("//meta");
 
@@ -79,10 +80,11 @@ namespace WebSiteCrawler.Sites
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
                     }
+                    
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    EngadgetJson myJson = JsonConvert.DeserializeObject<EngadgetJson>(json);
-                    var strinReleaseDate = myJson.datePublished;
-                    ReleaseDate = Convert.ToDateTime(strinReleaseDate.Replace("EDT",""));
+                    
+                    var strinReleaseDate = json.Substring(json.IndexOf("datePublished")+17,25);
+                    ReleaseDate = Convert.ToDateTime(strinReleaseDate);
 
 
                     AddDb();
