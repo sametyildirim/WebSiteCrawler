@@ -38,6 +38,9 @@ namespace WebSiteCrawler.Sites
 
 
             var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
+
+
+            
             List<string> tags = new List<string>();
             foreach (var link in links)
             {
