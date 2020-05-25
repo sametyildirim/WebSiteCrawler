@@ -25,6 +25,7 @@ namespace WebSiteCrawler.Sites
         {
             var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
+            web.OverrideEncoding = Encoding.UTF8;
             var htmlDoc = web.Load(html);
             var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
             List<string> tags = new List<string>();
