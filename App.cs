@@ -24,11 +24,13 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-            StartAllCrawling();
-            // WebSite website = new Theverge(_context);
-            // website.Crawl();
+            //StartAllCrawling();
+            WebSite website = new Engadget(_context);
+            website.Crawl();
+            
 
         }
+     
         public void StartAllCrawling()
         {
             using (StreamWriter w = File.AppendText("/tmp/log.txt"))
