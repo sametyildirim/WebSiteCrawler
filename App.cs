@@ -27,8 +27,8 @@ namespace WebSiteCrawler
             StartAllCrawling();
 
             
-            // Techcrunch website = new Techcrunch(_context);
-            // website.Crawl();
+            Techcrunch website = new Techcrunch(_context);
+            website.Crawl();
             
 
         }
