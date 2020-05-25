@@ -24,9 +24,9 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-            //StartAllCrawling();
-            WebSite website = new Engadget(_context);
-            website.Crawl();
+            StartAllCrawling();
+            // WebSite website = new Engadget(_context);
+            // website.Crawl();
             
 
         }
