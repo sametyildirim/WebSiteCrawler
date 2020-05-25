@@ -10,11 +10,15 @@ using Newtonsoft.Json;
 
 namespace WebSiteCrawler.Sites
 {
-    public class Engadget : WebSite
+     public class TechcrunchJson
     {
-        public Engadget(ApplicationDbContext context) : base(context)
+        public DateTime datePublished { get; set; }
+    }
+    public class Techcrunch : WebSite
+    {
+        public Techcrunch(ApplicationDbContext context) : base(context)
         {
-            this.Name = "engadget";
+            this.Name = "techcrunch";
             SetRootUrl();
         }
         public override List<string> GetLinks()
@@ -23,7 +27,7 @@ namespace WebSiteCrawler.Sites
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
             //var node = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'primary-grid-component')]/div");
-            var links = htmlDoc.DocumentNode.SelectNodes("//article/a[1]");
+            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
             List<string> tags = new List<string>();
             foreach (var link in links)
             {
@@ -34,11 +38,6 @@ namespace WebSiteCrawler.Sites
 
 
             }
-            var lastlink = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'o-rating_thumb@m-')]/a");
-            if (!tags.Contains(lastlink.Attributes["href"].Value))
-            {
-                tags.Add(lastlink.Attributes["href"].Value);
-            }
             return tags;
         }
         public override void Crawl()
@@ -47,7 +46,7 @@ namespace WebSiteCrawler.Sites
             foreach (string link in links)
             {
 
-                var html = "https://www.engadget.com" + link;
+                var html = link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -63,7 +62,7 @@ namespace WebSiteCrawler.Sites
                         {
                             Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (metaproperty == "og:title")
+                        if (metaname == "sailthru.title")
                         {
                             Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
@@ -77,10 +76,10 @@ namespace WebSiteCrawler.Sites
                         }
                     }
                     
+                   
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    
-                    var strinReleaseDate = json.Substring(json.IndexOf("datePublished")+17,25);
-                    ReleaseDate = Convert.ToDateTime(strinReleaseDate);
+                    BbcJson myJson = JsonConvert.DeserializeObject<BbcJson>(json);
+                    ReleaseDate = myJson.datePublished;
 
 
                     AddDb();

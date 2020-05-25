@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace WebSiteCrawler.Sites
 {
-    public class ContextJson
+    public class BbcJson
     {
         public DateTime datePublished { get; set; }
     }
@@ -70,7 +70,7 @@ namespace WebSiteCrawler.Sites
                     }
 
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    ContextJson myJson = JsonConvert.DeserializeObject<ContextJson>(json);
+                    BbcJson myJson = JsonConvert.DeserializeObject<BbcJson>(json);
                     ReleaseDate = myJson.datePublished;
 
                     AddDb();
