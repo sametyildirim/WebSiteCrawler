@@ -24,11 +24,11 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-            StartAllCrawling();
+            //StartAllCrawling();
 
             
-            // Venturebeat website = new Venturebeat(_context);
-            // website.Crawl();
+            Phys website = new Phys(_context);
+            website.Crawl();
             
 
         }
