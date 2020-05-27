@@ -42,7 +42,7 @@ namespace WebSiteCrawler.Sites
             {
 
                 var html = link;
-               // if (!IfExists(html))
+                if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
                     web.OverrideEncoding = Encoding.UTF8;
