@@ -24,22 +24,11 @@ namespace WebSiteCrawler.Sites
         public override List<string> GetLinks()
         {
             var html = RootUrl;
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.OptionReadEncoding = false;
-            var request = (HttpWebRequest)WebRequest.Create(html);
-            request.Method = "GET";
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                using (var stream = response.GetResponseStream())
-                {
-                    htmlDoc.Load(stream, Encoding.UTF8);
-                }
-            }
-
-
-            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
-            
+            HtmlWeb web = new HtmlWeb();
+            var htmlDoc = web.Load(html);
+            var links = htmlDoc.DocumentNode.SelectNodes("//h2[contains(@class,'post-block__title')]/a[1]");
             List<string> tags = new List<string>();
+
             foreach (var link in links)
             {
                 if (!tags.Contains(link.Attributes["href"].Value))

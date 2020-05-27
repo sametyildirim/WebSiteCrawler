@@ -27,7 +27,7 @@ namespace WebSiteCrawler
             //StartAllCrawling();
 
             
-            Fastcompany website = new Fastcompany(_context);
+            Thenextweb website = new Thenextweb(_context);
             website.Crawl();
             
 

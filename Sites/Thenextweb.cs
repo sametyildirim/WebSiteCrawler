@@ -19,7 +19,7 @@ namespace WebSiteCrawler.Sites
     {
         public Thenextweb(ApplicationDbContext context) : base(context)
         {
-            this.Name = "zdnet";
+            this.Name = "thenextweb";
             SetRootUrl();
         }
         public override List<string> GetLinks()
@@ -27,18 +27,23 @@ namespace WebSiteCrawler.Sites
             var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
-            var links = htmlDoc.DocumentNode.SelectNodes("//h4");
+            var links = htmlDoc.DocumentNode.SelectNodes("//h2[contains(@class,'cover-title')]/a[1]");
             List<string> tags = new List<string>();
-            int i=0;
             foreach (var link in links)
             {
                 if (!tags.Contains(link.Attributes["href"].Value))
                 {
                     tags.Add(link.Attributes["href"].Value);
                 }
-                i++;
 
-                if(i==24) break;
+            }
+            var links2 = htmlDoc.DocumentNode.SelectNodes("//h4[contains(@class,'story-title')]/a[1]");
+            foreach (var link in links2)
+            {
+                if (!tags.Contains(link.Attributes["href"].Value))
+                {
+                    tags.Add(link.Attributes["href"].Value);
+                }
 
             }
             return tags;
@@ -49,7 +54,7 @@ namespace WebSiteCrawler.Sites
             foreach (string link in links)
             {
 
-                var html = "https://www.zdnet.com"+link;
+                var html = link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -62,7 +67,7 @@ namespace WebSiteCrawler.Sites
                         string metaproperty = item.GetAttributeValue("property", "");
                         if (metaproperty == "og:url")
                         {
-                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                            Url = html;
                         }
                         if (metaproperty == "og:title")
                         {
@@ -76,12 +81,11 @@ namespace WebSiteCrawler.Sites
                         {
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
+                        if (metaproperty == "article:published_time")
+                        {
+                            ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
+                        }
                     }
-                    var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    ZdnetJson myJson = JsonConvert.DeserializeObject<ZdnetJson>(json);
-                    ReleaseDate = myJson.datePublished;
-                    Subject = myJson.headline;
-
 
                     AddDb();
                 }
