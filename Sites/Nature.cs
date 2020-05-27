@@ -20,8 +20,10 @@ namespace WebSiteCrawler.Sites
         public override List<string> GetLinks()
         {
             var html = RootUrl;
-            HtmlWeb web = new HtmlWeb();
-            var htmlDoc = web.Load(html);
+            WebClient webClient = new WebClient();
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.Load(webClient.OpenRead(html), Encoding.UTF8);
+
             var links = htmlDoc.DocumentNode.SelectNodes("//h2[contains(@role, 'heading')]/a[1]");
             List<string> tags = new List<string>();
             foreach (var link in links)
@@ -41,7 +43,7 @@ namespace WebSiteCrawler.Sites
             foreach (string link in links)
             {
 
-                var html = link;
+                var html = "https://www.nature.com"+link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -54,7 +56,7 @@ namespace WebSiteCrawler.Sites
                         string metaproperty = item.GetAttributeValue("property", "");
                         if (metaproperty == "og:url")
                         {
-                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                            Url = html;
                         }
                         if (metaproperty == "og:title")
                         {
