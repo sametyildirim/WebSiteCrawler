@@ -69,13 +69,10 @@ namespace WebSiteCrawler.Sites
                         {
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (metaproperty == "article:published_time")
-                        {
-                            ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
-                        }
+
                     }
 
-                    var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
+                    var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')][2]").InnerText);
                     BbcJson myJson = JsonConvert.DeserializeObject<BbcJson>(json);
                     ReleaseDate = myJson.datePublished;
 
