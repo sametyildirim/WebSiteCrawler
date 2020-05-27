@@ -24,11 +24,11 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-            //StartAllCrawling();
+            StartAllCrawling();
 
             
-             Techxplore website = new Techxplore(_context);
-             website.Crawl();
+            //  Techxplore website = new Techxplore(_context);
+            //  website.Crawl();
             
 
         }
