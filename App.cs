@@ -27,7 +27,7 @@ namespace WebSiteCrawler
             //StartAllCrawling();
 
             
-            Newscientist website = new Newscientist(_context);
+            Fastcompany website = new Fastcompany(_context);
             website.Crawl();
             
 

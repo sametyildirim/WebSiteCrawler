@@ -22,7 +22,7 @@ namespace WebSiteCrawler.Sites
             var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
-            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class, 'ArticleListing__title-link')]");
+            var links = htmlDoc.DocumentNode.SelectNodes("//article/a[1]");
             List<string> tags = new List<string>();
             foreach (var link in links)
             {
@@ -42,7 +42,7 @@ namespace WebSiteCrawler.Sites
             {
 
                 var html = link;
-                if (!IfExists(html))
+               // if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
                     web.OverrideEncoding = Encoding.UTF8;
@@ -75,8 +75,10 @@ namespace WebSiteCrawler.Sites
                     }
                     
 
-
+                  if(!Content.Contains("Sponsored"))
+                  {
                     AddDb();
+                 }
                 }
 
             }

@@ -22,7 +22,7 @@ namespace WebSiteCrawler.Sites
             var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
-            var links = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'queryly_item_row')]");
+            var links = htmlDoc.DocumentNode.SelectNodes("//article[contains(@class, 'card card--all-feed')]//a[1]");
             List<string> tags = new List<string>();
             foreach (var link in links)
             {
@@ -46,7 +46,7 @@ namespace WebSiteCrawler.Sites
                 {
                     HtmlWeb web = new HtmlWeb();
                     web.OverrideEncoding = Encoding.UTF8;
-                    var htmlDoc = web.Load(html);
+                    var htmlDoc = web.Load("https://www.fastcompany.com"+html);
                     var list = htmlDoc.DocumentNode.SelectNodes("//meta");
 
                     foreach (var item in list)
