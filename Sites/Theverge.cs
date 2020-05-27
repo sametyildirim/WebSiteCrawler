@@ -55,7 +55,7 @@ namespace WebSiteCrawler.Sites
                         string metaproperty= item.GetAttributeValue("property", "");
                         if (metaproperty == "og:url")
                         {
-                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                            Url = html;
                         }
                         if (metaname == "sailthru.title")
                         {

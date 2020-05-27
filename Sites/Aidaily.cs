@@ -50,7 +50,7 @@ namespace WebSiteCrawler.Sites
                         string itemprop = item.GetAttributeValue("itemprop", "");
                         if (content == "og:url")
                         {
-                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                            Url = html;
                         }
                         if (itemprop == "headline")
                         {

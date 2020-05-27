@@ -48,7 +48,7 @@ namespace WebSiteCrawler.Sites
                         string content = item.GetAttributeValue("property", "");
                         if (content == "og:url")
                         {
-                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                            Url = html;
                         }
                         // if (content == "og:title")
                         // {
