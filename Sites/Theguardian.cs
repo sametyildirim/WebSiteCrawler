@@ -10,35 +10,19 @@ using Newtonsoft.Json;
 
 namespace WebSiteCrawler.Sites
 {
-    public class TechcrunchJson
+    public class Theguardian : WebSite
     {
-        public DateTime datePublished { get; set; }
-    }
-    public class Techcrunch : WebSite
-    {
-        public Techcrunch(ApplicationDbContext context) : base(context)
+        public Theguardian(ApplicationDbContext context) : base(context)
         {
-            this.Name = "techcrunch";
+            this.Name = "theguardian";
             SetRootUrl();
         }
         public override List<string> GetLinks()
         {
             var html = RootUrl;
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.OptionReadEncoding = false;
-            var request = (HttpWebRequest)WebRequest.Create(html);
-            request.Method = "GET";
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                using (var stream = response.GetResponseStream())
-                {
-                    htmlDoc.Load(stream, Encoding.UTF8);
-                }
-            }
-
-
-            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
-            
+            HtmlWeb web = new HtmlWeb();
+            var htmlDoc = web.Load(html);
+            var links = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'fc-item__content ')]//a[1]");
             List<string> tags = new List<string>();
             foreach (var link in links)
             {
@@ -46,7 +30,6 @@ namespace WebSiteCrawler.Sites
                 {
                     tags.Add(link.Attributes["href"].Value);
                 }
-
 
             }
             return tags;
@@ -67,13 +50,14 @@ namespace WebSiteCrawler.Sites
 
                     foreach (var item in list)
                     {
-                        string metaname = item.GetAttributeValue("name", "");
                         string metaproperty = item.GetAttributeValue("property", "");
+                        string metaitemprop = item.GetAttributeValue("itemprop", "");
+
                         if (metaproperty == "og:url")
                         {
-                            Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
+                            Url = html;
                         }
-                        if (metaname == "sailthru.title")
+                        if (metaproperty == "og:title")
                         {
                             Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
@@ -85,13 +69,17 @@ namespace WebSiteCrawler.Sites
                         {
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
+                        if (metaproperty == "article:published_time")
+                        {
+                            ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
+                        }
+
                     }
-
-
-                    var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    BbcJson myJson = JsonConvert.DeserializeObject<BbcJson>(json);
-                    ReleaseDate = myJson.datePublished;
-
+                    if (Content == "")
+                    {
+                          var node = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'content__standfirst')]//p[1]");
+                          Content = WebUtility.HtmlDecode(node.InnerText);
+                    }
 
                     AddDb();
                 }

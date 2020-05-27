@@ -10,43 +10,35 @@ using Newtonsoft.Json;
 
 namespace WebSiteCrawler.Sites
 {
-    public class TechcrunchJson
+    public class ThenextwebJson
     {
         public DateTime datePublished { get; set; }
+        public string headline { get; set; }
     }
-    public class Techcrunch : WebSite
+    public class Thenextweb : WebSite
     {
-        public Techcrunch(ApplicationDbContext context) : base(context)
+        public Thenextweb(ApplicationDbContext context) : base(context)
         {
-            this.Name = "techcrunch";
+            this.Name = "zdnet";
             SetRootUrl();
         }
         public override List<string> GetLinks()
         {
             var html = RootUrl;
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.OptionReadEncoding = false;
-            var request = (HttpWebRequest)WebRequest.Create(html);
-            request.Method = "GET";
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                using (var stream = response.GetResponseStream())
-                {
-                    htmlDoc.Load(stream, Encoding.UTF8);
-                }
-            }
-
-
-            var links = htmlDoc.DocumentNode.SelectNodes("//a[contains(@class,'post-block__title__link')]");
-            
+            HtmlWeb web = new HtmlWeb();
+            var htmlDoc = web.Load(html);
+            var links = htmlDoc.DocumentNode.SelectNodes("//h4");
             List<string> tags = new List<string>();
+            int i=0;
             foreach (var link in links)
             {
                 if (!tags.Contains(link.Attributes["href"].Value))
                 {
                     tags.Add(link.Attributes["href"].Value);
                 }
+                i++;
 
+                if(i==24) break;
 
             }
             return tags;
@@ -57,7 +49,7 @@ namespace WebSiteCrawler.Sites
             foreach (string link in links)
             {
 
-                var html = link;
+                var html = "https://www.zdnet.com"+link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -67,13 +59,12 @@ namespace WebSiteCrawler.Sites
 
                     foreach (var item in list)
                     {
-                        string metaname = item.GetAttributeValue("name", "");
                         string metaproperty = item.GetAttributeValue("property", "");
                         if (metaproperty == "og:url")
                         {
                             Url = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (metaname == "sailthru.title")
+                        if (metaproperty == "og:title")
                         {
                             Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
@@ -86,11 +77,10 @@ namespace WebSiteCrawler.Sites
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
                     }
-
-
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    BbcJson myJson = JsonConvert.DeserializeObject<BbcJson>(json);
+                    ZdnetJson myJson = JsonConvert.DeserializeObject<ZdnetJson>(json);
                     ReleaseDate = myJson.datePublished;
+                    Subject = myJson.headline;
 
 
                     AddDb();
