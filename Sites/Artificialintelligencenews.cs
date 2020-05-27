@@ -37,6 +37,7 @@ namespace WebSiteCrawler.Sites
             List<string> links = GetLinks();
             foreach (string link in links)
             {
+                 var html = link;
                 if (!IfExists(link))
                 {
                     HtmlWeb web = new HtmlWeb();
