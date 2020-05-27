@@ -70,6 +70,7 @@ namespace WebSiteCrawler
                 using (StreamWriter w = File.AppendText("/tmp/log.txt"))
                 {
                     Log("Error Occured " + ex.ToString(), w);
+                    Console.WriteLine(website.Name + " has error");
                 }
                 SendMail(website.Name + " has error." + ex.ToString(), website.Name);
             }
