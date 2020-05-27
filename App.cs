@@ -24,11 +24,11 @@ namespace WebSiteCrawler
         public void Run()
         {
 
-            //StartAllCrawling();
+            StartAllCrawling();
 
             
-            Nature website = new Nature(_context);
-            website.Crawl();
+            // Nature website = new Nature(_context);
+            // website.Crawl();
             
 
         }

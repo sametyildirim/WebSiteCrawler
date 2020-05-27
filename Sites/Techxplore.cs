@@ -21,7 +21,7 @@ namespace WebSiteCrawler.Sites
         {
             var html = RootUrl;
             HtmlWeb web = new HtmlWeb();
-            var htmlDoc = web.Load(html+"/");
+            var htmlDoc = web.Load(html);
             var links = htmlDoc.DocumentNode.SelectNodes("//section[contains(@class, 'selection pt-4')]//a[1]");
             List<string> tags = new List<string>();
             foreach (var link in links)

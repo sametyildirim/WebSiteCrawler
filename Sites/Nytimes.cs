@@ -40,7 +40,7 @@ namespace WebSiteCrawler.Sites
             foreach (string link in links)
             {
 
-                var html = "https://www.nytimes.com/" + link;
+                var html = "https://www.nytimes.com" + link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
