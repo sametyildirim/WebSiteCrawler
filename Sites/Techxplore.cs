@@ -60,6 +60,7 @@ namespace WebSiteCrawler.Sites
                     foreach (var item in list)
                     {
                         string metaproperty = item.GetAttributeValue("property", "");
+                        string metahttpequiv = item.GetAttributeValue("http-equiv", "");
                         if (metaproperty == "og:url")
                         {
                             Url = html;
@@ -68,7 +69,7 @@ namespace WebSiteCrawler.Sites
                         {
                             Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
-                        if (metaproperty == "og:description")
+                        if (metahttpequiv == "Description")
                         {
                             Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }

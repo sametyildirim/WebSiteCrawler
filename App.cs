@@ -27,7 +27,7 @@ namespace WebSiteCrawler
             StartAllCrawling();
 
             
-            //  Thescientist website = new Thescientist(_context);
+            //  Techxplore website = new Techxplore(_context);
             //  website.Crawl();
             
 
