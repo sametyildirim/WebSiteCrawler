@@ -23,16 +23,23 @@ namespace WebSiteCrawler
 
         public void Run()
         {
+            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            StartAllCrawling();
+            if (environmentName == "Production")
+            {
+                StartAllCrawling();
+            }
+            else
+            {
 
-            
-            //  Techxplore website = new Techxplore(_context);
-            //  website.Crawl();
-            
+                Thenextweb website = new Thenextweb(_context);
+                website.Crawl();
+            }
+
+
 
         }
-     
+
         public void StartAllCrawling()
         {
             using (StreamWriter w = File.AppendText("/tmp/log.txt"))

@@ -12,8 +12,11 @@ namespace WebSiteCrawler.Sites
 {
     public class ThenextwebJson
     {
-        public DateTime datePublished { get; set; }
-        public string headline { get; set; }
+        public Image image {get;set; }
+    }
+    public class Image
+    {
+        public string url { get; set;}
     }
     public class Thenextweb : WebSite
     {
@@ -85,6 +88,18 @@ namespace WebSiteCrawler.Sites
                         {
                             ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
                         }
+                    }
+                    
+                    var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')][2]").InnerText);
+                    try
+                    {
+                        ThenextwebJson myJson = JsonConvert.DeserializeObject<ThenextwebJson>(json);
+                        Image = myJson.image!=null ? myJson.image.url : Image;
+                    }
+                    catch
+                    {
+                        var node = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class,'post-featuredImage u-m-1_5')]/img[1]");
+                        Image =  node.GetAttributeValue("src", "");
                     }
 
                     AddDb();
