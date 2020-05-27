@@ -23,18 +23,13 @@ namespace WebSiteCrawler
 
         public void Run()
         {
-            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            if (environmentName == "Production")
-            {
                 StartAllCrawling();
-            }
-            else
-            {
+       
 
-                Thenextweb website = new Thenextweb(_context);
-                website.Crawl();
-            }
+                // Thenextweb website = new Thenextweb(_context);
+                // website.Crawl();
+            
 
 
 

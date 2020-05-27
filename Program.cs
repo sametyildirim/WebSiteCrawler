@@ -33,6 +33,7 @@ namespace WebSiteCrawler
                 options.UseMySql(config.GetConnectionString("DefaultConnection")));
             services.Configure<EmailSettingsModel>(config.GetSection("EmailSettings")); 
             services.AddTransient<App>();
+        
             return services;
         }
 
