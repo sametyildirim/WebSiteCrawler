@@ -72,7 +72,7 @@ namespace WebSiteCrawler
             if (this.Image != null) this.Image = this.Image.Replace("http:", "https:");
             article.ImgUrl = this.Image;
             article.ReleaseDate = this.ReleaseDate;
-            article.ArticleSource = articleSource;
+            article.Source = articleSource;
 
             _context.Articles.Add(article);
             _context.SaveChanges();
