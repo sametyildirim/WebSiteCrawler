@@ -27,8 +27,8 @@ namespace WebSiteCrawler
                 StartAllCrawling();
        
 
-                // Techxplore website = new Techxplore(_context);
-                // website.Crawl();
+                //Artificialintelligencenews website = new Artificialintelligencenews(_context);
+                //website.Crawl();
             
 
 

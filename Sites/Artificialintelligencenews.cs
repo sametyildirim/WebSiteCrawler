@@ -51,14 +51,6 @@ namespace WebSiteCrawler.Sites
                         {
                             Url = html;
                         }
-                        // if (content == "og:title")
-                        // {
-                        //     Subject = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                        // }
-                        // if (content == "og:description")
-                        // {
-                        //     Content = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
-                        // }
                         if (content == "og:image")
                         {
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
@@ -70,6 +62,21 @@ namespace WebSiteCrawler.Sites
                     }
                     Subject = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//header[contains(@class, 'article-header')]//h1").InnerText);
                     Content = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//p[1]").InnerText);
+                    var  myImage = htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//img[1]");
+                    string[] stringImages = myImage.GetAttributeValue("srcset", "").Split(",");
+                    
+                    foreach(string stringImage in stringImages)
+                    {
+                      if(stringImage.IndexOf("300w")>0)
+                      {
+                        Image = stringImage.Substring(0,stringImage.IndexOf("300w"));
+                        break;
+                      }
+                      else if(stringImage.IndexOf("768w")>0)
+                      {
+                        Image = stringImage.Substring(0,stringImage.IndexOf("768w"));
+                      }
+                    }
                     AddDb();
                 }
 
