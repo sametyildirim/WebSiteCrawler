@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using BoilerPlateCms.Data;
-using Microsoft.Extensions.Options;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using WebSiteCrawler.Sites;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace WebSiteCrawler
 {
@@ -13,22 +13,22 @@ namespace WebSiteCrawler
     {
         private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
-        private readonly IOptions<EmailSettingsModel> _emailSettings;
-        public App(IConfiguration config, ApplicationDbContext context, IOptions<EmailSettingsModel> emailSettings)
+        private readonly IEmailSender _emailSender;
+        public App(IConfiguration config, ApplicationDbContext context, IEmailSender emailSender)
         {
             _config = config;
             _context = context;
-            _emailSettings = emailSettings;
+            _emailSender = emailSender;
         }
 
         public void Run()
         {
 
+                
                 StartAllCrawling();
        
                 //Aidaily website = new Aidaily(_context);
                 //website.Crawl();
-            
 
 
 
@@ -82,7 +82,7 @@ namespace WebSiteCrawler
 
             string subject = "aidailynews error " + sitename;
             string body = mailbody;
-            _emailSettings.Value.SendMail(subject, body);
+            _emailSender.SendEmailAsync("",subject, body);
 
         }
         public static void Log(string logMessage, TextWriter w)

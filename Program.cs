@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using BoilerPlateCms.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using  Microsoft.AspNetCore.Identity.UI.Services;
 namespace WebSiteCrawler
 {
     class Program
@@ -33,6 +34,7 @@ namespace WebSiteCrawler
                 options.UseMySql(config.GetConnectionString("DefaultConnection")));
             services.Configure<EmailSettingsModel>(config.GetSection("EmailSettings")); 
             services.AddTransient<App>();
+            services.AddSingleton<IEmailSender, MyEmailSender>();
         
             return services;
         }
