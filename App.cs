@@ -26,8 +26,7 @@ namespace WebSiteCrawler
 
                 StartAllCrawling();
        
-
-                //Artificialintelligencenews website = new Artificialintelligencenews(_context);
+                //Aidaily website = new Aidaily(_context);
                 //website.Crawl();
             
 

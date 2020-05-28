@@ -70,7 +70,7 @@ namespace WebSiteCrawler.Sites
                         }
 
                     }
-
+                    Image = Image.Replace("1500w","300w");                    
                     AddDb();
                 }
 
