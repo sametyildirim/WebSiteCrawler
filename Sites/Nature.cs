@@ -45,12 +45,12 @@ namespace WebSiteCrawler.Sites
             {
                 i++;
 
-                var html = "https://www.nature.com"+link;
+                var html = "https://www.nature.com" + link;
                 if (!IfExists(html))
                 {
-                    HtmlWeb web = new HtmlWeb();
-                    web.OverrideEncoding = Encoding.UTF8;
-                    var htmlDoc = web.Load(html);
+                    WebClient webClient = new WebClient();
+                    HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                    htmlDoc.Load(webClient.OpenRead(html), Encoding.UTF8);
                     var list = htmlDoc.DocumentNode.SelectNodes("//meta");
 
                     foreach (var item in list)
@@ -77,8 +77,17 @@ namespace WebSiteCrawler.Sites
                             ReleaseDate = Convert.ToDateTime(WebUtility.HtmlDecode(item.GetAttributeValue("content", "")));
                         }
                     }
-                    
 
+                    var nodeDate= htmlDoc.DocumentNode.SelectSingleNode("//time[contains(@itemprop, 'datePublished')]");
+                    if (nodeDate != null)
+                    {
+                            ReleaseDate = Convert.ToDateTime(nodeDate.InnerText);
+                    }
+                    
+                    if (String.IsNullOrEmpty(Content))
+                    {
+                        Content = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@id, 'Abs1-content')]//p[1]").InnerText);
+                    }
 
                     AddDb();
                 }

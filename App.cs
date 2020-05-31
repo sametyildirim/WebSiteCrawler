@@ -27,8 +27,8 @@ namespace WebSiteCrawler
                 
                 StartAllCrawling();
        
-                //Aidaily website = new Aidaily(_context);
-                //website.Crawl();
+                // Nature website = new Nature(_context);
+                // website.Crawl();
 
 
 
