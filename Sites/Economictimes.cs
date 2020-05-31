@@ -46,10 +46,11 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
-
-                var html = "https://economictimes.indiatimes.com"+link;
+                i++;
+                var html = "https://economictimes.indiatimes.com" + link;
                 if (!IfExists(html))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -84,8 +85,12 @@ namespace WebSiteCrawler.Sites
                         }
 
                     }
-                    
+
                     AddDb();
+                }
+                else if (i == 1)
+                {
+                    return;
                 }
 
             }

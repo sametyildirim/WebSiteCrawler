@@ -39,9 +39,10 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
-
+                i++;
                 var html = link;
                 if (!IfExists(html))
                 {
@@ -77,6 +78,10 @@ namespace WebSiteCrawler.Sites
 
 
                     AddDb();
+                }
+                 else if (i == 1)
+                {
+                    return;
                 }
 
             }

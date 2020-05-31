@@ -38,8 +38,10 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
+                i++;
 
                 var html = "https://www.bbc.com" + link;
                 if (!IfExists(html))
@@ -74,6 +76,10 @@ namespace WebSiteCrawler.Sites
                     ReleaseDate = myJson.datePublished;
 
                     AddDb();
+                }
+                else if (i == 1)
+                {
+                    return;
                 }
 
 

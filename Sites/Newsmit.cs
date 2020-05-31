@@ -34,8 +34,10 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
+                i++;
 
                 var html = "https://news.mit.edu" + link;
                 if (!IfExists(html))
@@ -68,6 +70,10 @@ namespace WebSiteCrawler.Sites
                     ReleaseDate = Convert.ToDateTime(htmlDoc.DocumentNode.SelectSingleNode("//span[contains(@itemprop, 'datePublished')]").Attributes["content"].Value);
 
                     AddDb();
+                }
+                 else if (i == 1)
+                {
+                    return;
                 }
 
 

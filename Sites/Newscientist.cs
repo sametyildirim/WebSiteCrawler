@@ -42,8 +42,10 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
+                i++;
 
                 var html = "https://www.newscientist.com" + link;
                 if (!IfExists(html))
@@ -80,6 +82,10 @@ namespace WebSiteCrawler.Sites
                     ReleaseDate = DateTime.ParseExact(stringReleaseDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                     AddDb();
+                }
+                 else if (i == 1)
+                {
+                    return;
                 }
 
             }

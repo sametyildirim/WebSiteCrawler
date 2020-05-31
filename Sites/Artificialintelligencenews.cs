@@ -35,9 +35,11 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
-                 var html = link;
+                i++;
+                var html = link;
                 if (!IfExists(link))
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -62,22 +64,26 @@ namespace WebSiteCrawler.Sites
                     }
                     Subject = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//header[contains(@class, 'article-header')]//h1").InnerText);
                     Content = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//p[1]").InnerText);
-                    var  myImage = htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//img[1]");
+                    var myImage = htmlDoc.DocumentNode.SelectSingleNode("//section[contains(@class, 'entry-content')]//img[1]");
                     string[] stringImages = myImage.GetAttributeValue("srcset", "").Split(",");
-                    
-                    foreach(string stringImage in stringImages)
+
+                    foreach (string stringImage in stringImages)
                     {
-                      if(stringImage.IndexOf("300w")>0)
-                      {
-                        Image = stringImage.Substring(0,stringImage.IndexOf("300w"));
-                        break;
-                      }
-                      else if(stringImage.IndexOf("768w")>0)
-                      {
-                        Image = stringImage.Substring(0,stringImage.IndexOf("768w"));
-                      }
+                        if (stringImage.IndexOf("300w") > 0)
+                        {
+                            Image = stringImage.Substring(0, stringImage.IndexOf("300w"));
+                            break;
+                        }
+                        else if (stringImage.IndexOf("768w") > 0)
+                        {
+                            Image = stringImage.Substring(0, stringImage.IndexOf("768w"));
+                        }
                     }
                     AddDb();
+                }
+                else if (i == 1)
+                {
+                    return;
                 }
 
 

@@ -44,8 +44,10 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
+                i++;
 
                 var html = "https://www.engadget.com" + link;
                 if (!IfExists(html))
@@ -76,14 +78,18 @@ namespace WebSiteCrawler.Sites
                             Image = WebUtility.HtmlDecode(item.GetAttributeValue("content", ""));
                         }
                     }
-                    
+
                     var json = WebUtility.HtmlDecode(htmlDoc.DocumentNode.SelectSingleNode("//script[contains(@type, 'application/ld+json')]").InnerText);
-                    
-                    var strinReleaseDate = json.Substring(json.IndexOf("datePublished")+17,25);
+
+                    var strinReleaseDate = json.Substring(json.IndexOf("datePublished") + 17, 25);
                     ReleaseDate = Convert.ToDateTime(strinReleaseDate);
 
 
                     AddDb();
+                }
+                else if (i == 1)
+                {
+                    return;
                 }
 
             }

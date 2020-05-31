@@ -39,8 +39,10 @@ namespace WebSiteCrawler.Sites
         public override void Crawl()
         {
             List<string> links = GetLinks();
+            int i = 0;
             foreach (string link in links)
             {
+                i++;
 
                 var html = "https://www.wired.com" + link;
                 if (!IfExists(html))
@@ -73,6 +75,10 @@ namespace WebSiteCrawler.Sites
                     ReleaseDate = Convert.ToDateTime(node.InnerText.ToString());
 
                     AddDb();
+                }
+                 else if (i == 1)
+                {
+                    return;
                 }
 
             }
